@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 public class WordBreakData {
@@ -28,17 +30,25 @@ public class WordBreakData {
 			line = line.trim();
 			if (line.length() != 0 && line.charAt(0)!='#') {
 				String[] split = line.split(" ");
-				System.out.println(split[0]);
 				addData(split[0]);
 			}
 		}
+		
+		Collections.sort(data, new Comparator<Object>() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				int val1 = (o1 instanceof Integer)?((Integer)o1).intValue():((DataPair)o1).data1;
+				int val2 = (o2 instanceof Integer)?((Integer)o2).intValue():((DataPair)o2).data1;
+				return val1-val2;
+			}
+		});
+		
 		return this;
 	}
 
 	private void addData(String str) {
 		String[] splt = str.split("\\.\\.");
 		if (splt.length == 1) {
-			System.out.println("SINGLE: " + splt[0]);
 			data.add(Integer.valueOf(splt[0], 16));
 		} else {
 			DataPair dp = new DataPair();

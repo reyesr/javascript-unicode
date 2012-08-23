@@ -4,9 +4,17 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="src/wordbreaks.js"></script>
 <script type="text/javascript" src="src/categ_letters.js"></script>
 <script type="text/javascript" src="src/categ_letters_numbers.js"></script>
 <script type="text/javascript" src="src/categ_numbers.js"></script>
+<script type="text/javascript" src="src/categ_puncts.js"></script>
+<script type="text/javascript" src="src/categ_separators.js"></script>
+<script type="text/javascript" src="src/categ_puncts_separators.js"></script>
+<script type="text/javascript" src="src/categ_puncts_separators_controls.js"></script>
+<script type="text/javascript" src="src/categ_controls.js"></script>
+<script type="text/javascript" src="src/categ_maths.js"></script>
+<script type="text/javascript" src="src/categ_currencies.js"></script>
 <script type="text/javascript" src="src/normalizer_lowercase_nomark.js"></script>
 <script type="text/javascript" src="src/normalizer_lowercase.js"></script>
 <script type="text/javascript" src="src/normalizer_uppercase_nomark.js"></script>
@@ -39,6 +47,13 @@ textarea.typebox {
 		<div>is_letter() <span id="is_letter"></span></div>
 		<div>is_number() <span id="is_number"></span></div>
 		<div>is_letter_number() <span id="is_letter_number"></span></div>
+		<div>is_punct() <span id="is_punct"></span></div>
+		<div>is_separator() <span id="is_separator"></span></div>
+		<div>is_punct_separator() <span id="is_punct_separator"></span></div>
+		<div>is_punct_separator_control() <span id="is_punct_separator_control"></span></div>
+		<div>is_control() <span id="is_control"></span></div>
+		<div>is_math() <span id="is_math"></span></div>
+		<div>is_currency() <span id="is_currency"></span></div>
 	</div>
 </div>
 <div style="clear:both">
@@ -60,7 +75,9 @@ function displayRes($id, value) {
 }
 
 function displayCat(c) {
-	var targets = ["is_letter_number", "is_letter", "is_number"];
+	var targets = ["is_letter_number", "is_letter", "is_number", "is_punct", "is_separator", "is_punct_separator", "is_punct_separator_control", 
+	               "is_control", "is_math", "is_currency"];
+	
 	for (var i=0; i<targets.length; ++i) {
 		var res = net.kornr.unicode[targets[i]](c);
 		$("#"+targets[i]).html(res?"true":"false");
@@ -70,7 +87,6 @@ function displayCat(c) {
 $(document).ready(function() {
 	
 	$("#typehere").keypress(function(e) {
-		console.log(e);
 		$("#lastkey").html("pressed: " + e.charCode);
 		displayCat(e.charCode);
 	});	

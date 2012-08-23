@@ -7,6 +7,10 @@ net.kornr.unicode= net.kornr.unicode||{};
 	var CONST_GO_LEFT = -1;
 	var CONST_GO_RIGHT = -2;
 
+	/**
+	 * Creates a searching function that memorizes the last found character index, to make same-codepage
+	 * lookups efficient.
+	 */
 	function make_search_function_in_array(data) {
 		
 		var lastindex = 0;
@@ -30,6 +34,12 @@ net.kornr.unicode= net.kornr.unicode||{};
 						lastindex = index;
 						return true;
 					}
+				} else {
+					if (r == c) {
+						lastindex = index;
+						return true;
+					}
+					step = c<r?-1:+1;
 				}
 				
 				if (direction == 0) {
@@ -57,37 +67,6 @@ net.kornr.unicode= net.kornr.unicode||{};
 				throw "Missing data, you need to include " + originFile;
 			}
 		}
-
-		/*
-		function search_codepoint_in_array(c) {
-			var index = lastindex;
-			var r = data[index];
-			var step = 1;
-			var direction = 0;
-			while (index >= 0 && index<data.length) {
-				
-				if (r instanceof Array) {
-					if (c < r[0]) {
-						step = -1;
-					}  else if (c > r[1]) {
-						step = +1
-					} else {
-						lastindex = index;
-						return true;
-					}
-				}
-				
-				if (direction == 0) {
-					direction = step;
-				} else if (direction != step) {
-					lastindex = index;
-					return false;
-				}
-				index += step;
-			}
-			lastindex = index;
-			return false;
-		}*/
 
 		var search_codepoint_in_array = make_search_function_in_array(data);
 		
@@ -211,6 +190,16 @@ net.kornr.unicode= net.kornr.unicode||{};
 	NAMESPACE.is_letter = create_category_lookup_function(NAMESPACE.categ_letters_data, "categ_letters.js");
 	NAMESPACE.is_letter_number = create_category_lookup_function(NAMESPACE.categ_letters_numbers_data, "categ_letters_numbers.js");
 	NAMESPACE.is_number = create_category_lookup_function(NAMESPACE.categ_numbers_data, "categ_numbers.js");
+
+	NAMESPACE.is_punct = create_category_lookup_function(NAMESPACE.categ_punct_data, "categ_puncts.js");
+	NAMESPACE.is_separator = create_category_lookup_function(NAMESPACE.categ_separators_data, "categ_separators.js");
+	NAMESPACE.is_punct_separator = create_category_lookup_function(NAMESPACE.categ_puncts_separators_data, "categ_puncts_separators_controls.js");
+	NAMESPACE.is_punct_separator_control = create_category_lookup_function(NAMESPACE.categ_puncts_separators_controls_data, "categ_puncts_separators.js");
+	
+	
+	NAMESPACE.is_control = create_category_lookup_function(NAMESPACE.categ_controls_data, "categ_controls.js");
+	NAMESPACE.is_math = create_category_lookup_function(NAMESPACE.categ_maths_data, "categ_maths.js");
+	NAMESPACE.is_currency = create_category_lookup_function(NAMESPACE.categ_currencies_data, "categ_currencies.js");
 	
 	return NAMESPACE;
 })(net.kornr.unicode);

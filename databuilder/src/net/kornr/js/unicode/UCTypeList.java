@@ -60,6 +60,27 @@ public class UCTypeList {
 		return this;
 	}
 
+	public UCTypeList build(DataTable table, String[] accepted, boolean invert) {
+		LinkedList<CPair> res = new LinkedList<CPair>();
+		for (int i=0,max=table.length(); i<max; ++i) {
+			Object[] row = table.at(i);
+			boolean test = false;
+			for (String aa: accepted) {
+				if (aa.equals(row[2])) {
+					test = true;
+				}
+			}
+			if (invert) {
+				test = !test;
+			}
+			if (test) {
+				res.add(new CPair((Integer)row[0], row[2]));
+			}
+		}
+		data = res;
+		return this;
+	}
+
 	/**
 	 * Aggregates the elements of this list using StackedCPair
 	 * @param checkData if true, prevents the merging if the data are not equals. If false, ignores the data.
