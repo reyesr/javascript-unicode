@@ -20,8 +20,9 @@ Note that the <tt>unicode.js</tt> file must be loaded last.
 The library sets itself in the <tt>net.kornr.unicode</tt> namespace to avoid collision.
 
 Algorithms are designed to perform more efficiently when the looked-up characters are part
-of the same character set.
-
+of the same character set. The loaded datasets (such as <tt>normalizer_lowercase_nomark.js</tt>)
+are pre-processed and compacted so that several operations are performed in a single
+pass (for instance case-changing, decomposition, and diacritical marks removal).
 
 Licence
 -------
