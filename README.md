@@ -4,12 +4,13 @@ Javascript Unicode Library
 Provides support to javascript for unicode operations such as decomposition 
 and diacritical mark removal.
 
-In order to cope with the large set of unicode data and operation with a minimal 
+In order to cope with the large set of unicode data and operations with a minimal 
 memory and network footprint, this library provides optional data loading so that
 only the functions needed by the application have their data loaded.
 
 For instance, to be able to call the <tt>lowercase_nomark()</tt> function, the following
-script loading are required:
+script loading are required, so that only the small dataset used to perform the operation
+is loaded:
 
     * <script type="text/javascript" src="src/normalizer_lowercase_nomark.js"></script>
     * <script type="text/javascript" src="src/unicode.js"></script>
@@ -18,13 +19,26 @@ Note that the <tt>unicode.js</tt> file must be loaded last.
 
 The library sets itself in the <tt>net.kornr.unicode</tt> namespace to avoid collision.
 
+Algorithms are designed to perform more efficiently when the looked-up characters are part
+of the same character set.
+
+
+Licence
+-------
+
+This library is provided under the terms of the Apache License, Version 2.0.
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unicode Functions
 -----------------
 
 ## <tt>net.kornr.unicode.lowercase_nomark(some_string)</tt>
 
-Returns a lower-cased, decomposed form, with all the diacritical marks removed.
+Returns a lower-cased, decomposed form, with all the diacritical marks removed. This operation is performed
+as follows:
+- The characters are converted into lower case if needed
+- The characters are converted into their decomposed canonical form. That is, for instance the char é is decomposed into chars 65 + 301.
+- All characters identified as diacritical marks by the unicode database are removed from the string
 
 ### Requirement
     * <script type="text/javascript" src="normalizer_lowercase_nomark.js"></script>
@@ -53,6 +67,10 @@ and its diacritical marks)
 ## <tt>net.kornr.unicode.uppercase_nomark(some_string)</tt>
 
 Returns an upper-cased and decomposed form, with all the diacritical marks removed.
+This operation is performed as follows:
+- The characters are converted into upper case if needed
+- The characters are converted into their decomposed canonical form. That is, for instance the char é is decomposed into chars 65 + 301.
+- All characters identified as diacritical marks by the unicode database are removed from the string
 
 ### Requirement
     * <script type="text/javascript" src="normalizer_uppercase_nomark.js"></script>
