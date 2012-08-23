@@ -60,8 +60,6 @@ net.kornr.unicode= net.kornr.unicode||{};
 		
 	function create_category_lookup_function(data, originFile) {
 
-		var lastindex = 0;
-
 		if (data === undefined) {
 			return function() {
 				throw "Missing data, you need to include " + originFile;
