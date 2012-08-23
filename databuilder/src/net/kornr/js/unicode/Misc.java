@@ -12,8 +12,8 @@ public class Misc {
 
 	static public void createJSFile(File file, String varname, String data) throws IOException {
 		FileWriter writer = new FileWriter(file);
-		writer.write("var net = net||{};net.kornr = net.kornr||{};net.kornr.normalizer=net.kornr.normalizer||{};\n");
-		writer.write("net.kornr.normalizer."+varname+"=");
+		writer.write("var net = net||{};net.kornr = net.kornr||{};net.kornr.unicode=net.kornr.unicode||{};\n");
+		writer.write("net.kornr.unicode."+varname+"=");
 		writer.write(data);
 		writer.write(";\n");
 		writer.close();

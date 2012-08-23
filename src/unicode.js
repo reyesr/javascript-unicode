@@ -1,12 +1,53 @@
 var net = net||{};
 net.kornr = net.kornr||{};
-net.kornr.normalizer = net.kornr.normalizer||{}; 
+net.kornr.unicode= net.kornr.unicode||{}; 
 
 (function(NAMESPACE) {
 
 	var CONST_GO_LEFT = -1;
 	var CONST_GO_RIGHT = -2;
 
+	function make_search_function_in_array(data) {
+		
+		var lastindex = 0;
+
+		return function(c) {
+			var index = lastindex;
+			var r = data[index];
+			var step = 1;
+			var direction = 0;
+			
+			while (index >= 0 && index<data.length) {
+
+				r = data[index];
+				
+				if (r instanceof Array) {
+					if (c < r[0]) {
+						step = -1;
+					}  else if (c > r[1]) {
+						step = +1
+					} else {
+						lastindex = index;
+						return true;
+					}
+				}
+				
+				if (direction == 0) {
+					direction = step;
+				} else if (direction != step) {
+					return false;
+				}
+				index += step;
+				
+				if (index > data.length || index<0) {
+					return false;
+				}
+			}
+			return false;
+		}
+
+	}
+		
 	function create_category_lookup_function(data, originFile) {
 
 		var lastindex = 0;
@@ -16,15 +57,16 @@ net.kornr.normalizer = net.kornr.normalizer||{};
 				throw "Missing data, you need to include " + originFile;
 			}
 		}
-		
-		function check_codepoint(c) {
+
+		/*
+		function search_codepoint_in_array(c) {
 			var index = lastindex;
 			var r = data[index];
 			var step = 1;
 			var direction = 0;
 			while (index >= 0 && index<data.length) {
 				
-				if (typeof r == "array") {
+				if (r instanceof Array) {
 					if (c < r[0]) {
 						step = -1;
 					}  else if (c > r[1]) {
@@ -45,16 +87,26 @@ net.kornr.normalizer = net.kornr.normalizer||{};
 			}
 			lastindex = index;
 			return false;
-		}
+		}*/
+
+		var search_codepoint_in_array = make_search_function_in_array(data);
 		
 		return function(str) {
-			for (var i=0, max=str.length; i<max; ++i) {
-				var a = check_codepoint(str.charCodeAt(i));
-				if (a === false) {
-					return false;
+			switch(typeof str) {
+			case "number":
+				return search_codepoint_in_array(str);
+				break;
+			case "string":
+				for (var i=0, max=str.length; i<max; ++i) {
+					var a = search_codepoint_in_array(str.charCodeAt(i));
+					if (a === false) {
+						return false;
+					}
 				}
+				return true;
+			break;
 			}
-			return true;
+			return false;
 		}
 	}
 	
@@ -132,7 +184,7 @@ net.kornr.normalizer = net.kornr.normalizer||{};
 			var res = "";
 			for (var i=0, max=str.length; i<max; ++i) {
 				var a = normalize_char(str.charCodeAt(i));
-				if (typeof a == "array") {
+				if (a instanceof Array) {
 					for (var j=0; j<a.length; ++j) {
 						res += String.fromCharCode(a[j]);
 					}
@@ -145,20 +197,20 @@ net.kornr.normalizer = net.kornr.normalizer||{};
 	}	
 	//
 	// Converts a string to lowercase, then decompose it, and remove all diacritical marks
-	NAMESPACE.lowercase_nomark = create_normalizer(net.kornr.normalizer.norm_lowercase_nomark_data, "normalizer_lowercase_nomark.js");
+	NAMESPACE.lowercase_nomark = create_normalizer(NAMESPACE.norm_lowercase_nomark_data, "normalizer_lowercase_nomark.js");
 
 	// Converts a string to lowercase, then decompose it (this is different from the String.toLowerCase, as the latter does not decompose the string)
-	NAMESPACE.lowercase = create_normalizer(net.kornr.normalizer.norm_lowercase_data, "normalizer_lowercase.js");
+	NAMESPACE.lowercase = create_normalizer(NAMESPACE.norm_lowercase_data, "normalizer_lowercase.js");
 
 	// Converts a string to lowercase, then decompose it, and remove all diacritical marks
-	NAMESPACE.uppercase_nomark = create_normalizer(net.kornr.normalizer.norm_uppercase_nomark_data, "normalizer_uppercase_nomark.js");
+	NAMESPACE.uppercase_nomark = create_normalizer(NAMESPACE.norm_uppercase_nomark_data, "normalizer_uppercase_nomark.js");
 
 	// Converts a string to lowercase, then decompose it (this is different from the String.toLowerCase, as the latter does not decompose the string)
-	NAMESPACE.uppercase = create_normalizer(net.kornr.normalizer.norm_uppercase_data, "normalizer_uppercase.js");
+	NAMESPACE.uppercase = create_normalizer(NAMESPACE.norm_uppercase_data, "normalizer_uppercase.js");
 
-	NAMESPACE.is_letter = create_category_lookup_function(net.kornr.normalizer.unicode_letters_data, "categ_letters.js");
-	NAMESPACE.is_letter_number = create_category_lookup_function(net.kornr.normalizer.unicode_letters_numbers_data, "categ_letters_numbers.js");
-	NAMESPACE.is_number = create_category_lookup_function(net.kornr.normalizer.unicode_numbers_data, "categ_numbers.js");
+	NAMESPACE.is_letter = create_category_lookup_function(NAMESPACE.categ_letters_data, "categ_letters.js");
+	NAMESPACE.is_letter_number = create_category_lookup_function(NAMESPACE.categ_letters_numbers_data, "categ_letters_numbers.js");
+	NAMESPACE.is_number = create_category_lookup_function(NAMESPACE.categ_numbers_data, "categ_numbers.js");
 	
 	return NAMESPACE;
-})(net.kornr.normalizer);
+})(net.kornr.unicode);

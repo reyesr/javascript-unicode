@@ -113,10 +113,6 @@ public class UCTypeList {
 		boolean first = true;
 		for (Object o: data) {
 			
-			if (strData.length()>4096) {
-				return strData.toString();
-			}
-			
 			if (o instanceof StackedCPair) {
 				throw new RuntimeException("Can't dump StackedCPair as object");
 			} else {
@@ -145,10 +141,6 @@ public class UCTypeList {
 		boolean first = true;
 		for (Object o: data) {
 			
-			if (strData.length()>4096) {
-				return strData.toString();
-			}
-
 			if (o instanceof StackedCPair) {
 				StackedCPair sp = (StackedCPair)o;
 				if (dumpValue) {

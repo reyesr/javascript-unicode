@@ -3,16 +3,91 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="src/categ_letters.js"></script>
+<script type="text/javascript" src="src/categ_letters_numbers.js"></script>
+<script type="text/javascript" src="src/categ_numbers.js"></script>
 <script type="text/javascript" src="src/normalizer_lowercase_nomark.js"></script>
+<script type="text/javascript" src="src/normalizer_lowercase.js"></script>
+<script type="text/javascript" src="src/normalizer_uppercase_nomark.js"></script>
+<script type="text/javascript" src="src/normalizer_uppercase.js"></script>
 <script type="text/javascript" src="src/unicode.js"></script>
+<style TYPE="text/css">
+
+div.floatbox {
+	float:left; width: 300px;
+}
+div.resultbox {
+	border: 1px solid black; margin:0.5em;
+	color: black; background-color: #EEEEEE;
+	overflow: hidden;
+}
+textarea.typebox {
+	float: left;
+	width: 300px; height: 200px; margin:1em;"
+	color: black; background-color: white;
+}
+</style>
 </head>
 <body>
-<h1>Tests</h1>
+<h1>Testing the Javascript Unicode support library</h1>
 
-<div id="result">RESULT HERE</div>
+<div>
+	<textarea id="typehere" class="typebox"></textarea>
+	<div>Categories check on last character typed
+		<div>Char code:<span id="lastkey"></span></div>
+		<div>is_letter() <span id="is_letter"></span></div>
+		<div>is_number() <span id="is_number"></span></div>
+		<div>is_letter_number() <span id="is_letter_number"></span></div>
+	</div>
+</div>
+<div style="clear:both">
+	<div class="floatbox">lowercase, decomposed, diacritical marks removed, using <tt>lowercase_nomark()</tt><div class="resultbox" id="result_lowercase_nomark" ></div></div>
+	<div class="floatbox">lowercase, decomposed, using <tt>lowercase()</tt><div class="resultbox" id="result_lowercase" ></div></div>
+	<div class="floatbox">uppercase, decomposed, diacritical marks removed, using <tt>uppercase_nomark()</tt><div class="resultbox" id="result_uppercase_nomark" ></div></div>
+	<div class="floatbox">uppercase, decomposed, using <tt>uppercase()</tt><div class="resultbox" id="result_uppercase" ></div></div>
+</div>
+
 <script type="text/javascript">
-//document.write(convertStr("l'élêphant est ÛNË Çigâle"));
-document.write(net.kornr.normalizer.lowercase_nomark(" --- l'élêphant est ÛNË Çigâle"));
-</script>
+
+function displayRes($id, value) {
+	var str = "<div>length: " + value.length + "</div><hr/>";
+	str += "<div>" + value + "</div><hr/>";
+	for (var i=0, max=value.length; i<max; ++i) {
+		str += (i>0?" + ": "") + value.charCodeAt(i).toString(16);
+	}
+	$id.html(str);
+}
+
+function displayCat(c) {
+	var targets = ["is_letter_number", "is_letter", "is_number"];
+	for (var i=0; i<targets.length; ++i) {
+		var res = net.kornr.unicode[targets[i]](c);
+		$("#"+targets[i]).html(res?"true":"false");
+	}
+}
+
+$(document).ready(function() {
+	
+	$("#typehere").keypress(function(e) {
+		console.log(e);
+		$("#lastkey").html("pressed: " + e.charCode);
+		displayCat(e.charCode);
+	});	
+
+	
+	$("#typehere").keyup(function() {
+		var value = $(this).val();
+		// console.log("value = " + value);
+		var lcnm = net.kornr.unicode.lowercase_nomark(value);
+		// console.log("lcnm = " + lcnm);
+		$("#result_lowercase_nomark").html(net.kornr.unicode.lowercase_nomark(value));
+		displayRes($("#result_lowercase_nomark"), net.kornr.unicode.lowercase_nomark(value));
+		displayRes($("#result_lowercase"), net.kornr.unicode.lowercase(value));;
+		displayRes($("#result_uppercase_nomark"), net.kornr.unicode.uppercase_nomark(value));
+		displayRes($("#result_uppercase"), net.kornr.unicode.uppercase(value));
+		
+	});
+});</script>
 </body>
 </html>
