@@ -63,7 +63,7 @@ and its diacritical marks)
 
 ### Example
 
-    var mystring = net.kornr.unicode.lowercase_nomark("Ça brûle")); // returns "ça brûle"
+    var mystring = net.kornr.unicode.lowercase("Ça brûle")); // returns "ça brûle"
     
 ## <tt>net.kornr.unicode.uppercase_nomark(some_string)</tt>
 
@@ -80,7 +80,7 @@ This operation is performed as follows:
 ### Example
 
     var UC = net.kornr.unicode;
-    var mystring = UC.lowercase_nomark("Ça brûle")); // returns "CA BRULE"
+    var mystring = UC.uppercase_nomark("Ça brûle")); // returns "CA BRULE"
     
 
 ## <tt>net.kornr.unicode.uppercase(some_string)</tt>
@@ -95,7 +95,7 @@ and its diacritical marks)
 
 ### Example
 
-    var mystring = net.kornr.unicode.lowercase_nomark("Ça brûle")); // returns "ÇA BRÛLE"
+    var mystring = net.kornr.unicode.uppercase("Ça brûle")); // returns "ÇA BRÛLE"
     
 ## <tt>net.kornr.unicode.is_letter(some_string)</tt>
 
