@@ -1,0 +1,25 @@
+{
+  "name": "javascript-unicode",
+  "version": "0.1.0",
+  "homepage": "https://github.com/reyesr/javascript-unicode",
+  "authors": [
+    "Rodrigo Reyes <reyes.rr@gmail.com>"
+  ],
+  "description": "Unicode support for javascript",
+  "main": "src/unicode.js",
+  "keywords": [
+    "unicode"
+  ],
+  "license": {
+    "type": "Apache-2.0",
+    "url": "http://www.apache.org/licenses/LICENSE-2.0"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test.html",
+    "data",
+    "databuilder"
+  ]
+}
